@@ -1,4 +1,5 @@
-use fil_actors_runtime::{ActorError, actor_error, fvm_ipld_hamt::{BytesKey}};
+use fil_actors_runtime::{ActorError, actor_error};
+use fil_actors_runtime::fvm_ipld_hamt::BytesKey;
 use fvm_ipld_blockstore::Blockstore;
 use serde_tuple::{Deserialize_tuple, Serialize_tuple};
 use primitives::{TCid, THamt};
@@ -46,10 +47,11 @@ impl State {
         value: u64
     ) -> Result<(), ActorError> {
         self.map
-            .modify(store, |hamt| Ok({
+            .modify(store, |hamt| {
                 hamt.set(BytesKey::from(&key.to_string()[..]), value)
                     .map_err(|_| actor_error!(illegal_state, "Cannot set value in hamt"))?;
-            }))
+                Ok(())
+            })
             .map_err(|_| actor_error!(illegal_state, "Cannot modify map"))?;
         Ok(())
     }

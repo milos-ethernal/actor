@@ -40,7 +40,7 @@ mod test {
     #[test]
     fn test_constructor() {
         let runtime = construct_runtime();
-        assert_eq!(runtime.state.is_some(), true);
+        assert!(runtime.state.is_some());
 
         let state: State = runtime.get_state();
         assert_eq!(state.count, 0);
